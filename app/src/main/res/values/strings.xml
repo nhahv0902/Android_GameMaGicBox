@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GameMagicBox</string>
+    <string name="game_magic_box">GAME \n MAGIC BOX</string>
+    <string name="time_" formated="false">TIMES: %1$S</string>
+</resources>
