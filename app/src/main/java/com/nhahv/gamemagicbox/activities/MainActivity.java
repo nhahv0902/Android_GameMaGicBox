@@ -17,15 +17,16 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button mBtn1, mBtn2, mBtn3, mBtn4, mBtn5, mBtn6, mBtn7, mBtn8, mBtn9;
-    private TextView mTxtTime;
+    private Button[] mListButton = new Button[mNumber];
+    private TextView mTxtTime, mTxtTitle;
     private Random mRandom;
     private int mSum;
     private int mSumClick;
     private int mColor = Color.parseColor("#8BC34A");
     private int time = 5;
-    private Thread mThread;
     private Handler mHandler;
+    private static final int mNumber = 9;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (time <= 0) {
                     getShowToast("YOU LOSE");
-                    setEnable();
+                    setEnableFails();
                 }
             }
         };
@@ -52,29 +53,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        mBtn1 = (Button) findViewById(R.id.btn_1);
-        mBtn2 = (Button) findViewById(R.id.btn_2);
-        mBtn3 = (Button) findViewById(R.id.btn_3);
-        mBtn4 = (Button) findViewById(R.id.btn_4);
-        mBtn5 = (Button) findViewById(R.id.btn_5);
-        mBtn6 = (Button) findViewById(R.id.btn_6);
-        mBtn7 = (Button) findViewById(R.id.btn_7);
-        mBtn8 = (Button) findViewById(R.id.btn_8);
-        mBtn9 = (Button) findViewById(R.id.btn_9);
+        for (int i = 0; i < mNumber; i++) {
+            mListButton[i] = (Button) findViewById(R.id.btn_1 + i);
+            mListButton[i].setOnClickListener(new Events());
+        }
+
         mTxtTime = (TextView) findViewById(R.id.txt_time);
+        mTxtTitle = (TextView) findViewById(R.id.txt_title);
         mTxtTime.setText(getString(R.string.time_, time));
     }
 
     private void addEvents() {
-        mBtn1.setOnClickListener(new Events());
-        mBtn2.setOnClickListener(new Events());
-        mBtn3.setOnClickListener(new Events());
-        mBtn4.setOnClickListener(new Events());
-        mBtn5.setOnClickListener(new Events());
-        mBtn6.setOnClickListener(new Events());
-        mBtn7.setOnClickListener(new Events());
-        mBtn8.setOnClickListener(new Events());
-        mBtn9.setOnClickListener(new Events());
+        mTxtTitle.setOnClickListener(new Events());
     }
 
     private class Events implements View.OnClickListener {
@@ -82,33 +72,44 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_1:
-                    onClickButton(mBtn1);
+                    onClickButton(mListButton[0]);
                     break;
                 case R.id.btn_2:
-                    onClickButton(mBtn2);
+                    onClickButton(mListButton[1]);
                     break;
                 case R.id.btn_3:
-                    onClickButton(mBtn3);
+                    onClickButton(mListButton[2]);
                     break;
                 case R.id.btn_4:
-                    onClickButton(mBtn4);
+                    onClickButton(mListButton[3]);
                     break;
                 case R.id.btn_5:
-                    onClickButton(mBtn5);
+                    onClickButton(mListButton[4]);
                     break;
                 case R.id.btn_6:
-                    onClickButton(mBtn6);
+                    onClickButton(mListButton[5]);
                     break;
                 case R.id.btn_7:
-                    onClickButton(mBtn7);
+                    onClickButton(mListButton[6]);
                     break;
                 case R.id.btn_8:
-                    onClickButton(mBtn8);
+                    onClickButton(mListButton[7]);
                     break;
                 case R.id.btn_9:
-                    onClickButton(mBtn9);
+                    onClickButton(mListButton[8]);
+                    break;
+                case R.id.txt_title:
+                    onClickTryAgain();
                     break;
             }
+        }
+
+        private void onClickTryAgain() {
+            time = 5;
+            mTxtTime.setText(getString(R.string.time_, time));
+            mSumClick = 0;
+            mSum = 0;
+            setEnable();
         }
     }
 
@@ -126,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
         button.setEnabled(false);
         if (mSum > 50) {
             getShowToast("You Wind");
-            setEnable();
+            setEnableFails();
             return;
         }
         if (mSumClick == 9) {
             getShowToast("You Lose");
-            setEnable();
+            setEnableFails();
         }
 
     }
@@ -153,16 +154,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void setEnableFails() {
+        for (int i = 0; i < mNumber; i++) {
+            mListButton[i].setEnabled(false);
+        }
+    }
+
     private void setEnable() {
-        mBtn1.setEnabled(false);
-        mBtn2.setEnabled(false);
-        mBtn3.setEnabled(false);
-        mBtn4.setEnabled(false);
-        mBtn5.setEnabled(false);
-        mBtn6.setEnabled(false);
-        mBtn7.setEnabled(false);
-        mBtn8.setEnabled(false);
-        mBtn9.setEnabled(false);
+        for (int i = 0; i < mNumber; i++) {
+            mListButton[i].setEnabled(true);
+            mListButton[i].setText("");
+            mListButton[i].setBackgroundColor(getResources().getColor(R.color.colorButton));
+        }
     }
 
     private void getShowToast(String string) {
